@@ -1,0 +1,1 @@
+# armbian-ys-f66c-plasma6

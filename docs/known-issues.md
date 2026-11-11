@@ -40,10 +40,9 @@ Debian trixie. Рабочий обход — Synaptic/apt. Не тянуть Qt/
 - В сессии Plasma 6: Qt Virtual Keyboard на Qt 6.8/Wayland не работает
   client-side; Maliit даёт белый fullscreen-surface и отключён. Рабочий обход —
   Onboard + uinput, русская раскладка, автозапуск.
-- В SDDM-гретере: включён `InputMethod=qtvirtualkeyboard` (X11-гретер), пакеты
-  Qt6 Virtual Keyboard установлены. Это отдельный путь от Wayland-сессии.
-  Если клавиатура не появится, fallback — запуск Onboard через X11
-  `DisplayCommand`.
+- В SDDM-гретере штатная клавиатура SDDM/Breeze работает. Не задавайте
+  `InputMethod` в конфиге SDDM: `qtvirtualkeyboard` зависает на Qt 6.8.2.
+  xvkbd не устанавливать.
 - Автопоказ Onboard по фокусу недоступен из-за отсутствующего Atspi typelib.
 
 ## microSD

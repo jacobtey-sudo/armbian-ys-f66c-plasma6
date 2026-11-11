@@ -29,22 +29,17 @@ SDDM-гретер — X11-клиент и не читает пользовате
 
 - `/usr/local/sbin/ys-f66c-sddm-xsetup` — перебирает подключённые выходы и,
   если выход ещё портретный, выполняет `xrandr --output ... --rotate right`;
-- `/etc/sddm.conf.d/ys-f66c-rotation.conf` — включает X11-гретер, Qt Virtual
-  Keyboard и указывает `DisplayCommand` в секции `[X11]` на этот скрипт.
+- `/etc/sddm.conf.d/ys-f66c-rotation.conf` — включает X11-гретер и указывает
+  `DisplayCommand` в секции `[X11]` на этот скрипт.
 
 При автологине гретер не показывается; конфиг нужен для экрана после logout.
 Проверить можно, временно отключив автологин и перезапустив SDDM.
 
 ### Виртуальная клавиатура SDDM
 
-В том же конфиге включён `InputMethod=qtvirtualkeyboard`. Пакеты
-`qt6-virtualkeyboard-plugin`, `libqt6virtualkeyboard6` и
-`qml6-module-qtquick-virtualkeyboard` установлены; тема Breeze содержит кнопку
-«Virtual Keyboard». Раньше в `/etc/sddm.conf.d/armbian.conf` стояло
-`InputMethod=none`, поэтому клавиатура не появлялась.
-
-Если Qt-клавиатура не поднимется, следующий вариант — запускать Onboard в
-X11-гретере через тот же `DisplayCommand`.
+Штатная клавиатура SDDM/Breeze работает. Не задавайте `InputMethod` в
+`ys-f66c-rotation.conf`: `qtvirtualkeyboard` зависает на Qt 6.8.2. Отдельный
+xvkbd не нужен.
 
 ## Ограничения
 

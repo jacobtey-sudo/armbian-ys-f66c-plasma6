@@ -1,19 +1,27 @@
 # Известные проблемы
 
-## CPU не масштабирует частоту
+## CPU regulator — исправлено
 
-Симптомы в `dmesg`:
+Причина была в DTS: CPU-supply указывал на SYR827 по адресу `0x40`, а на плате
+стоит TCS4525 по адресу `0x1c`. Из-за этого cpufreq не инициализировался и CPU
+работал на 816 МГц.
+
+Исправление в `armbian-ys-f66c`:
 
 ```text
-cpu cpu0: failed to set opp config
-cpu cpu0: failed to init opp info
-cpufreq: regulator not ready, deferring initialization
-cpufreq: gave up waiting for regulator after 50 retries
+vdd_cpu: tcs4525@1c {
+    compatible = "tcs,tcs452x";
+    reg = <0x1c>;
 ```
 
-Фактически CPU работает на **816 МГц**, cpufreq/thermal-политики не поднялись.
-Это главный известный кандидат на «тормознутость», важнее выбора файловой системы.
-Нужно чинить regulator/OPP в DTS или порядке инициализации в vendor-ядре.
+После перезагрузки: `vdd_cpu` = 1025 мВ, CPU до 1608 МГц, governor `schedutil`.
+Если снова появится 816 МГц — проверить `dmesg | grep -E 'cpu cpu0|cpufreq|fan53555'`.
+
+## Нет thermal-зон
+
+`/sys/class/thermal` содержит только cooling devices, без `thermal_zone*`.
+CPU OPP ссылается на `soc-thermal`, но драйвер tsadc не регистрирует зоны.
+Сейчас это не мешает работе, но означает отсутствие штатного thermal throttling.
 
 ## Discover падает
 

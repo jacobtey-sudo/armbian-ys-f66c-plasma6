@@ -14,8 +14,10 @@
 
 - База: Debian 13 `trixie`, Plasma `6.3.6`, Qt `6.8.2`.
 - Ядро: `6.1.172-vendor-rk35xx`.
-- Рабочая система сейчас на microSD; следующий шаг — перенос на eMMC.
+- Рабочая система перенесена на eMMC; microSD остаётся fallback.
+- Исправлен CPU regulator: TCS4525 на `0x1c`, CPU работает до 1608 МГц.
 - Префиксы: `/opt/plasma5` (legacy, не трогать) и `/opt/plasma6`.
+- Производительность: [docs/performance.md](docs/performance.md).
 - Известные проблемы: [docs/known-issues.md](docs/known-issues.md).
 
 ## Структура

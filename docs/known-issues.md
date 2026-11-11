@@ -35,6 +35,12 @@ X11 `DisplayCommand`. Если Plymouth показывает графическ�
 Краш в Qt QML на Qt `6.8.2`; исправление в upstream Qt `6.8.4`, которого нет в
 Debian trixie. Рабочий обход — Synaptic/apt. Не тянуть Qt/Plasma из sid.
 
+## Экран блокировки
+
+BSP отключает размытие обоев Breeze. На панели 1280x800 размытие выглядит как
+«всё расплылось». Патч меняет `WallpaperFader.qml`; после обновления
+`plasma-workspace` его нужно повторить.
+
 ## Виртуальная клавиатура
 
 - В сессии Plasma 6: Qt Virtual Keyboard на Qt 6.8/Wayland не работает

@@ -47,6 +47,11 @@ kscreen-doctor --dpms on
 
 Пользовательский `~/.config/powerdevilrc` перекрывает настройки BSP.
 
+## Яркость подсветки
+
+Вход подсветки панели active-low. Без флага `PWM_POLARITY_INVERTED` ползунок
+яркости работает в обратную сторону. Флаг включён в `rk3566-ys-f66c.dts`.
+
 ## Виртуальная клавиатура
 
 - В сессии Plasma 6: Qt Virtual Keyboard на Qt 6.8/Wayland не работает

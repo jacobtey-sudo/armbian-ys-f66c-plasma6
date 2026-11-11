@@ -25,7 +25,7 @@ CPU OPP ссылается на `soc-thermal`, но драйвер tsadc не р
 
 ## Поворот заставки Plymouth
 
-Текстовая консоль повёрнута через `fbcon=rotate:3`, а вход SDDM — через
+Текстовая консоль повёрнута через `fbcon=rotate:1`, а вход SDDM — через
 X11 `DisplayCommand`. Если Plymouth показывает графическую заставку, она может
 остаться в портретной ориентации: у Plymouth нет общего поворота с fbcon.
 Подробности и варианты — в [boot-rotation.md](boot-rotation.md).
@@ -37,10 +37,14 @@ Debian trixie. Рабочий обход — Synaptic/apt. Не тянуть Qt/
 
 ## Виртуальная клавиатура
 
-- Qt Virtual Keyboard на Qt 6.8/Wayland не работает client-side.
-- Maliit даёт белый fullscreen-surface и отключён.
-- Рабочий обход: Onboard + uinput, русская раскладка, автозапуск.
-- Автопоказ по фокусу недоступен из-за отсутствующего Atspi typelib.
+- В сессии Plasma 6: Qt Virtual Keyboard на Qt 6.8/Wayland не работает
+  client-side; Maliit даёт белый fullscreen-surface и отключён. Рабочий обход —
+  Onboard + uinput, русская раскладка, автозапуск.
+- В SDDM-гретере: включён `InputMethod=qtvirtualkeyboard` (X11-гретер), пакеты
+  Qt6 Virtual Keyboard установлены. Это отдельный путь от Wayland-сессии.
+  Если клавиатура не появится, fallback — запуск Onboard через X11
+  `DisplayCommand`.
+- Автопоказ Onboard по фокусу недоступен из-за отсутствующего Atspi typelib.
 
 ## microSD
 

@@ -11,15 +11,15 @@
 В `bootenv/ys-f66c.txt` добавлен параметр ядра:
 
 ```text
-fbcon=rotate:3
+fbcon=rotate:1
 ```
 
-Он поворачивает fbcon на 270° по часовой стрелке — так же, как KWin. Это
-действует на строки загрузки и текстовые VT. Проверка:
+Он поворачивает fbcon на 90° по часовой стрелке. Это действует на строки
+загрузки и текстовые VT. Проверка:
 
 ```bash
-cat /sys/class/graphics/fbcon/rotate      # должно быть 3
-cat /proc/cmdline                          # должен быть fbcon=rotate:3
+cat /sys/class/graphics/fbcon/rotate      # должно быть 1
+cat /proc/cmdline                          # должен быть fbcon=rotate:1
 ```
 
 ### Окно входа SDDM
@@ -27,13 +27,24 @@ cat /proc/cmdline                          # должен быть fbcon=rotate:
 SDDM-гретер — X11-клиент и не читает пользовательский
 `~/.config/kwinoutputconfig.json`. Поэтому в BSP добавлены:
 
-- `/usr/local/sbin/ys-f66c-sddm-xsetup` — перебирает подключённые выходы и
-  выполняет `xrandr --output ... --rotate left`;
-- `/etc/sddm.conf.d/ys-f66c-rotation.conf` — включает X11-гретер и указывает
-  `DisplayCommand` на этот скрипт.
+- `/usr/local/sbin/ys-f66c-sddm-xsetup` — перебирает подключённые выходы и,
+  если выход ещё портретный, выполняет `xrandr --output ... --rotate right`;
+- `/etc/sddm.conf.d/ys-f66c-rotation.conf` — включает X11-гретер, Qt Virtual
+  Keyboard и указывает `DisplayCommand` в секции `[X11]` на этот скрипт.
 
 При автологине гретер не показывается; конфиг нужен для экрана после logout.
 Проверить можно, временно отключив автологин и перезапустив SDDM.
+
+### Виртуальная клавиатура SDDM
+
+В том же конфиге включён `InputMethod=qtvirtualkeyboard`. Пакеты
+`qt6-virtualkeyboard-plugin`, `libqt6virtualkeyboard6` и
+`qml6-module-qtquick-virtualkeyboard` установлены; тема Breeze содержит кнопку
+«Virtual Keyboard». Раньше в `/etc/sddm.conf.d/armbian.conf` стояло
+`InputMethod=none`, поэтому клавиатура не появлялась.
+
+Если Qt-клавиатура не поднимется, следующий вариант — запускать Onboard в
+X11-гретере через тот же `DisplayCommand`.
 
 ## Ограничения
 
@@ -48,6 +59,6 @@ SDDM-гретер — X11-клиент и не читает пользовате
 
 ## Если направление не то
 
-- Консоль: заменить `fbcon=rotate:3` на `fbcon=rotate:1` (90° вместо 270°).
-- SDDM: заменить `--rotate left` на `--rotate right` в
+- Консоль: заменить `fbcon=rotate:1` на `fbcon=rotate:3` (270° вместо 90°).
+- SDDM: заменить `--rotate right` на `--rotate left` в
   `ys-f66c-sddm-xsetup`.

@@ -18,6 +18,7 @@
 - Исправлен CPU regulator: TCS4525 на `0x1c`, CPU работает до 1608 МГц.
 - Префиксы: `/opt/plasma5` (legacy, не трогать) и `/opt/plasma6`.
 - Производительность: [docs/performance.md](docs/performance.md).
+- Поворот консоли и SDDM при загрузке: [docs/boot-rotation.md](docs/boot-rotation.md).
 - Известные проблемы: [docs/known-issues.md](docs/known-issues.md).
 
 ## Структура

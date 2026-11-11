@@ -1,0 +1,16 @@
+# Build outputs
+/build/
+/out/
+/artifacts/
+*.img
+*.img.xz
+*.img.zst
+*.tar
+*.tar.*
+*.deb
+*.log
+ccache/
+
+# Local overrides
+*.local
+.env

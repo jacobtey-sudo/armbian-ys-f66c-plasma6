@@ -53,16 +53,18 @@ kscreen-doctor --dpms on
 яркости работает в обратную сторону. Флаг включён в `rk3566-ys-f66c.dts`.
 Нижний уровень PWM снижен до `7/255`, чтобы минимальная яркость была темнее.
 
-## Виртуальная клавиатура
+## Виртуальная клавиатура — Maliit
 
-- В сессии Plasma 6: Qt Virtual Keyboard на Qt 6.8/Wayland не работает
-  client-side. Maliit даёт белый fullscreen-surface; пакеты Maliit удалены, а
-  `[Wayland] InputMethod` убран из `kwinrc`. Рабочий обход — Onboard + uinput,
-  русская раскладка, автозапуск.
-- В SDDM-гретере штатная клавиатура SDDM/Breeze работает. Не задавайте
-  `InputMethod` в конфиге SDDM: `qtvirtualkeyboard` зависает на Qt 6.8.2.
-  xvkbd не устанавливать.
-- Автопоказ Onboard по фокусу недоступен из-за отсутствующего Atspi typelib.
+Проверено 14.11.2026: Maliit полностью устраивает и в Plasma 6 (Wayland), и в
+SDDM. Onboard удалён, Qt Virtual Keyboard не используется.
+
+- В образ ставятся пакеты `maliit-keyboard`, `maliit-framework`,
+  `libmaliit-plugins2` (раньше они удалялись через `PACKAGE_LIST_BOARD_REMOVE`).
+- В `kwinrc` включены `[Wayland] InputMethod=/usr/share/applications/com.github.maliit.keyboard.desktop`
+  и `VirtualKeyboardEnabled=true`.
+- В SDDM задан `InputMethod=none`: штатная клавиатура SDDM/Breeze работает,
+  `qtvirtualkeyboard` на Qt 6.8.2 по-прежнему лучше не включать.
+- Автопоказ по фокусу не требуется: KWin сам поднимает Maliit для текстовых полей.
 
 ## microSD
 
@@ -92,3 +94,29 @@ read-only. После сбоя проверять `fsck`.
 После устранения 90-секундного таймаута `ttyFIQ0` проверочный `reboot`
 13.11.2026 прошёл нормально; если проблема повторится, снимать журнал текущей
 загрузки и проверять питание/PMIC отдельно.
+
+## Светодиоды (не решено)
+
+На работающем Android зелёный светодиод у GPIO-разъёма горит постоянно, а
+красный погашен, пока система работает.
+
+По Android-DTS и `gpioinfo`:
+
+- `ir_green_led` = `GPIO2_A3` (67), raw `1`;
+- `ir_red_led` = `GPIO2_A2` (66), raw `1` (красный активен низким уровнем);
+- `eth_green_led` = `GPIO3_A2` (98), raw `0` (active-low).
+
+Проверено на Linux 14.11.2026:
+
+- принудительные `GPIO66=1` и `GPIO67=1` (через переключение pinmux в GPIO)
+  зелёный не включают, красный остаётся гореть; Wi-Fi SDIO при этом падает;
+- `GPIO98=0` (active-low, как `eth_green_led` в Android) зелёный тоже не
+  включает;
+- `work` на `GPIO0_C0` (heartbeat) к этим светодиодам отношения не имеет.
+
+Похоже, светодиоды управляются MCU (`GPIO40` / `GPIO123`) либо сидят на
+неизвестном пине. Нужно искать дальше; текущий BSP-модуль `misc-gpio` только
+формирует heartbeat и `mcu_shutdown_control`. Проверка: загрузить ядро с
+`misc-gpio` как можно раньше (initramfs) и посмотреть, не зажжёт ли MCU зелёный
+сам. Отдельно проверить, не является ли красный аппаратным индикатором
+питания.

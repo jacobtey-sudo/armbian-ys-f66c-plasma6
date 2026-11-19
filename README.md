@@ -15,11 +15,14 @@
 
 ## Текущее состояние
 
-- База: Debian 13 `trixie`, Plasma `6.3.6`, Qt `6.8.2`.
+- База: Debian 13 `trixie`, Plasma `6.3.6`, Qt `6.8.2` (system-wide, `/usr`).
 - Ядро: `6.1.172-vendor-rk35xx`.
-- Рабочая система перенесена на eMMC; microSD остаётся fallback.
+- Проверенный носитель — microSD; eMMC на тестовом экземпляре занята Android.
 - CPU regulator: TCS4525 на `0x1c`, CPU работает до 1608 МГц.
-- Префиксы: `/opt/plasma5` (legacy, не трогать) и `/opt/plasma6`.
+- `/opt/plasma5` и `/opt/plasma6` в текущем образе отсутствуют: overlay не
+  содержит `/opt`, а Plasma ставится пакетами Debian в `/usr`. Префиксы в
+  `config/versions.env` — задел на отдельную изолированную сборку, не текущее
+  состояние.
 - Экранная клавиатура: Maliit, работает в Plasma и SDDM.
 - Производительность: [docs/performance.md](docs/performance.md).
 - Поворот консоли и SDDM при загрузке: [docs/boot-rotation.md](docs/boot-rotation.md).
@@ -41,7 +44,7 @@ cd armbian-ys-f66c-plasma6
 ```text
 config/     версии и пины (versions.env — источник истины)
 docs/       сборка, железо, поворот, производительность, известные проблемы
-overlay/    desktop-конфиги, которые попадают в образ (/etc/skel)
+overlay/    desktop-конфиги, которые попадают в образ (/etc/skel, systemd, environment.d)
 patches/    патчи к Plasma/KWin/пакетам (пока пусто)
 scripts/    build.sh и install-overlay.sh
 ```
@@ -53,4 +56,3 @@ GPL-2.0-only. См. [LICENSE](LICENSE).
 ## Связанные проекты
 
 - [armbian-ys-f66c](https://github.com/jacobtey-sudo/armbian-ys-f66c) — board support.
-- `/opt/plasma5` — сохранённая предыдущая сборка, используется как fallback.

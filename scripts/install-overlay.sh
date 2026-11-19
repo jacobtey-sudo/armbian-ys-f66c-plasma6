@@ -44,6 +44,8 @@ fi
 
 echo "[overlay] installing into /etc (mostly /etc/skel)"
 cp -a "${OVERLAY}/etc/." /etc/
+# The checkout is owned by the build user; system files must stay root-owned.
+chown -R root:root /etc/skel /etc/environment.d /etc/systemd/user
 
 if [[ -n "${TARGET_USER}" ]]; then
 	HOME_DIR="$(getent passwd "${TARGET_USER}" | cut -d: -f6)"

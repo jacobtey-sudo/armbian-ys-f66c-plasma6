@@ -30,10 +30,26 @@ X11 `DisplayCommand`. Если Plymouth показывает графическ�
 остаться в портретной ориентации: у Plymouth нет общего поворота с fbcon.
 Подробности и варианты — в [boot-rotation.md](boot-rotation.md).
 
-## Discover падает
+## Qt QML: падение KWin, plasmashell и Discover (Qt 6.8.2)
 
-Краш в Qt QML на Qt `6.8.2`; исправление в upstream Qt `6.8.4`, которого нет в
-Debian trixie. Рабочий обход — Synaptic/apt. Не тянуть Qt/Plasma из sid.
+Симптомы: `kwin_wayland` и `kwin_x11` падают с SIGSEGV примерно каждые 20 секунд,
+`plasmashell` и Discover тоже могут падать. В стеке видно
+`QV4::CompiledData::CompilationUnit::loadFromDisk()` и `stringAtInternal()` в
+`libQt6Qml.so.6`. Это не GPU/Mesa, не Maliit и не владельцы файлов.
+
+Причина: Qt 6.8.2 проверяет размер и заголовок `.qmlc`, но читает таблицу строк
+по внутренним смещениям до проверки целостности. Повреждённый или устаревший
+файл в `~/.cache/<app>/qmlcache` приводит к SIGSEGV. Кэш — только оптимизация
+запуска, без него QML компилируется при старте приложения.
+
+Обход: `QML_DISABLE_DISK_CACHE=1` в systemd drop-in для KWin/plasmashell и в
+`/etc/environment.d` (входит в образ); BSP дополнительно пишет его в
+`/etc/environment` для SDDM. Проверено на железе 19.11.2026: Wayland и X11
+стабильны, новых core-дампов нет. Не тянуть Qt/Plasma из sid: это потянет
+половину дистрибутива.
+
+Upstream: исправление в более новых Qt (`6.8.4+`/`6.9`); в trixie только 6.8.2,
+поэтому обход остаётся до появления исправленного пакета.
 
 ## Экран блокировки и DPMS
 

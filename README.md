@@ -25,6 +25,7 @@
   состояние.
 - Экранная клавиатура: Maliit, работает в Plasma и SDDM.
 - Desktop: Discover, Yakuake, Application Dashboard, Netspeed и Window Buttons.
+- Прокси: FlClash (arm64), ставится из зафиксированного релиза при сборке.
 - Производительность: [docs/performance.md](docs/performance.md).
 - Поворот консоли и SDDM при загрузке: [docs/boot-rotation.md](docs/boot-rotation.md).
 - Известные проблемы: [docs/known-issues.md](docs/known-issues.md).

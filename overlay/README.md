@@ -41,6 +41,12 @@
   `usr/lib/systemd/system/ys-f66c-bt-autoconnect.service` — подключение
   доверенных аудиоустройств при загрузке.
 
+## Опциональные приложения
+
+- `usr/local/bin/ys-f66c-install-flclash` — ставит FlClash (arm64) из
+  зафиксированного релиза. SHA256 проверяется, `.deb` в git не хранится.
+  `customize-image.sh` запускает скрипт при сборке образа.
+
 ## Не добавлять
 
 - пароли, токены, SSH-ключи;

@@ -82,6 +82,29 @@ SDDM. Onboard удалён, Qt Virtual Keyboard не используется.
   `qtvirtualkeyboard` на Qt 6.8.2 по-прежнему лучше не включать.
 - Автопоказ по фокусу не требуется: KWin сам поднимает Maliit для текстовых полей.
 
+## Bluetooth и наушники
+
+BW-HP2 не переподключается сам после перезагрузки. Сервис
+`ys-f66c-bt-autoconnect.service` подключает доверенные аудиоустройства при
+загрузке.
+
+Кодек SBC-XQ на этом чипе не работает: звук пропадает. В образе он отключён
+(`/etc/wireplumber/wireplumber.conf.d/50-ys-f66c-bluetooth.conf`). Обычный SBC
+(A2DP) даёт стерео 48 кГц. Профиль HFP (`headset-head-unit`) даёт моно в обоих
+ушах — для микрофона, не для музыки. Перезапуск `wireplumber` при активном A2DP
+убирает профили A2DP до нового подключения.
+
+Проводные наушники в разъёме 3.5 мм глушат динамики (BSP-хук `ys_f66c_headset`;
+мост extcon → Playback Path кодека RK817).
+
+## eMMC и виджет EMMC
+
+Android userdata `mmcblk0p15` монтируется read-only в `/mnt/emmc`. eMMC не
+изменяется. Стандартный `ksystemstats` исключает flash-накопители, поэтому
+сенсор `disk/8028e49a-…` не появлялся. В образе установлен пропатченный
+`ksystemstats_plugin_disk.so`; патч — `patches/ksystemstats-6.3.4-emmc.patch`.
+Виджет `Использование EMMC` показывает занятое место этой файловой системы.
+
 ## microSD
 
 Последовательное чтение около 16 МБ/с; для Plasma это заметно медленнее eMMC.

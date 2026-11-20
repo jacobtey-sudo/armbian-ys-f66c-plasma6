@@ -1,0 +1,103 @@
+--- a/plugins/disks/disks.cpp
++++ b/plugins/disks/disks.cpp
+@@ -14,6 +14,8 @@
+ 
+ #include <QUrl>
+ 
++#include <sys/statvfs.h>
++
+ #include <KIO/FileSystemFreeSpaceJob>
+ #include <KLocalizedString>
+ #include <KPluginFactory>
+@@ -118,6 +120,10 @@
+         auto freePercent = new KSysGuard::PercentageSensor(this, "freePercent", i18nc("@title", "Percentage Free"));
+         freePercent->setPrefix(name());
+         freePercent->setBaseSensor(m_free);
++
++        // Populate the sensors immediately. ksystemstats may only call update()
++        // once a sensor is subscribed; the panel should not show zeros until then.
++        update();
+     } else {
+         m_rootDevice = true;
+     }
+@@ -134,18 +140,21 @@
+         // skip non-mounted partitions
+         return;
+     }
+-    auto job = KIO::fileSystemFreeSpace(QUrl::fromLocalFile(mountPoint));
+-    connect(job, &KJob::result, this, [this, job]() {
+-        if (!job->error()) {
+-            KIO::filesize_t size = job->size();
+-            KIO::filesize_t available = job->availableSize();
+-            m_total->setValue(size);
+-            m_free->setValue(available);
+-            m_free->setMax(size);
+-            m_used->setValue(size - available);
+-            m_used->setMax(size);
+-        }
+-    });
++
++    struct statvfs info;
++    if (::statvfs(mountPoint.toLocal8Bit().constData(), &info) != 0) {
++        return;
++    }
++
++    const quint64 blockSize = info.f_frsize ? info.f_frsize : info.f_bsize;
++    const quint64 size = blockSize * info.f_blocks;
++    const quint64 available = blockSize * info.f_bavail;
++
++    m_total->setValue(size);
++    m_free->setValue(available);
++    m_free->setMax(size);
++    m_used->setValue(size - available);
++    m_used->setMax(size);
+ }
+ 
+ void VolumeObject::setBytes(quint64 read, quint64 written, qint64 elapsed)
+@@ -199,28 +208,34 @@
+ {
+     auto container = containers()[0];
+     const auto volume = device.as<Solid::StorageVolume>();
+-    if (!volume || (volume->isIgnored() && volume->usage() != Solid::StorageVolume::PartitionTable)) {
++    const auto access = device.as<Solid::StorageAccess>();
++    // ys-f66c: the eMMC Android userdata partition is flash-backed and may be
++    // flagged as a system volume, so the normal hard-disk filter hides it.
++    // Include it when it is mounted at /mnt/emmc for the EMMC widget.
++    const bool isEmmcUserdata = access && access->filePath() == QStringLiteral("/mnt/emmc");
++    if (!volume || (volume->isIgnored() && volume->usage() != Solid::StorageVolume::PartitionTable && !isEmmcUserdata)) {
+         return;
+     }
+-    Solid::Device drive = device;
+-    // Only exlude volumes if we know that they are for sure not on a hard disk
+-    while (drive.isValid()) {
+-        if (drive.is<Solid::StorageDrive>()) {
+-            auto type = drive.as<Solid::StorageDrive>()->driveType();
+-            if (type == Solid::StorageDrive::HardDisk) {
+-                break;
+-            } else {
+-                return;
++    if (!isEmmcUserdata) {
++        Solid::Device drive = device;
++        // Only exlude volumes if we know that they are for sure not on a hard disk
++        while (drive.isValid()) {
++            if (drive.is<Solid::StorageDrive>()) {
++                auto type = drive.as<Solid::StorageDrive>()->driveType();
++                if (type == Solid::StorageDrive::HardDisk) {
++                    break;
++                } else {
++                    return;
++                }
+             }
++            drive = drive.parent();
+         }
+-        drive = drive.parent();
+     }
+     if (volume->usage() == Solid::StorageVolume::PartitionTable) {
+         auto block = device.as<Solid::Block>();
+         m_volumesByDevice.insert(block->device(), new VolumeObject(device, container));
+         return;
+     }
+-    auto access = device.as<Solid::StorageAccess>();
+     if (!access) {
+         return;
+     }

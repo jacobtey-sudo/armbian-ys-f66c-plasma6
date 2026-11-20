@@ -24,6 +24,7 @@
   `config/versions.env` — задел на отдельную изолированную сборку, не текущее
   состояние.
 - Экранная клавиатура: Maliit, работает в Plasma и SDDM.
+- Desktop: Discover, Yakuake, Application Dashboard, Netspeed и Window Buttons.
 - Производительность: [docs/performance.md](docs/performance.md).
 - Поворот консоли и SDDM при загрузке: [docs/boot-rotation.md](docs/boot-rotation.md).
 - Известные проблемы: [docs/known-issues.md](docs/known-issues.md).
@@ -38,6 +39,7 @@ cd armbian-ys-f66c-plasma6
 
 Подробности, требования и ручная сборка — в [docs/build.md](docs/build.md).
 Пины версий — в [config/versions.env](config/versions.env).
+Сторонние апплеты — в [docs/third-party.md](docs/third-party.md).
 
 ## Структура
 
@@ -45,7 +47,7 @@ cd armbian-ys-f66c-plasma6
 config/     версии и пины (versions.env — источник истины)
 docs/       сборка, железо, поворот, производительность, известные проблемы
 overlay/    desktop-конфиги, которые попадают в образ (/etc/skel, systemd, environment.d)
-patches/    патчи к Plasma/KWin/пакетам (пока пусто)
+patches/    патчи к Plasma/KWin/пакетам
 scripts/    build.sh и install-overlay.sh
 ```
 

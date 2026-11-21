@@ -17,11 +17,25 @@ vdd_cpu: tcs4525@1c {
 После перезагрузки: `vdd_cpu` = 1025 мВ, CPU до 1608 МГц, governor `schedutil`.
 Если снова появится 816 МГц — проверить `dmesg | grep -E 'cpu cpu0|cpufreq|fan53555'`.
 
-## Нет thermal-зон
+## Нет thermal-зон — tsadc выключен
 
 `/sys/class/thermal` содержит только cooling devices, без `thermal_zone*`.
-CPU OPP ссылается на `soc-thermal`, но драйвер tsadc не регистрирует зоны.
-Сейчас это не мешает работе, но означает отсутствие штатного thermal throttling.
+Причина: узел `tsadc@fe710000` в `rk356x.dtsi` имеет `status = "disabled"`, а
+DTS платы его не включает. `CONFIG_ROCKCHIP_THERMAL=y` в ядре есть. Внешних
+датчиков температуры в DT нет: нет батареи/топливомера, NTC на SARADC и hwmon.
+Проверено на планшете 21.11.2026: `tsadc status: disabled`.
+
+Исправление (в следующей сборке):
+
+```dts
+&tsadc {
+    status = "okay";
+};
+```
+
+Появятся `soc-thermal` (канал 0) и `gpu-thermal` (канал 1), температуры в
+`/sys/class/thermal/thermal_zone*/temp` (milli-°C) и штатный троттлинг по
+трип-поинтам. Это температура кристалла SoC, не корпуса и не АКБ.
 
 ## Поворот заставки Plymouth
 

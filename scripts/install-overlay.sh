@@ -42,19 +42,25 @@ if [[ ! -d "${OVERLAY}/etc" ]]; then
 	exit 1
 fi
 
+chown_root_owned() {
+	local root="$1" src="$2"
+	( cd "$src" && find . -mindepth 1 -printf '%P\0' ) |
+		while IFS= read -r -d '' rel; do
+			if [[ -e "${root}/${rel}" || -L "${root}/${rel}" ]]; then
+				chown -h root:root "${root}/${rel}"
+			fi
+		done
+}
+
 echo "[overlay] installing into /etc (mostly /etc/skel)"
 cp -a "${OVERLAY}/etc/." /etc/
 # The checkout is owned by the build user; system files must stay root-owned.
-chown -R root:root /etc/skel /etc/environment.d /etc/systemd/user
+chown_root_owned /etc "${OVERLAY}/etc"
 
 if [[ -d "${OVERLAY}/usr" ]]; then
 	echo "[overlay] installing system applets and plugins"
 	cp -a "${OVERLAY}/usr/." /usr/
-	for dir in /usr/share/plasma/plasmoids \
-		/usr/lib/aarch64-linux-gnu/qt6/qml/org/kde/appletdecoration \
-		/usr/lib/aarch64-linux-gnu/qt6/plugins/ksystemstats; do
-		[ -d "$dir" ] && chown -R root:root "$dir"
-	done
+	chown_root_owned /usr "${OVERLAY}/usr"
 fi
 
 # Refresh caches and enable the Bluetooth autoconnect service.
@@ -64,13 +70,11 @@ if [[ -f /usr/lib/systemd/system/ys-f66c-bt-autoconnect.service ]]; then
 	systemctl enable ys-f66c-bt-autoconnect.service 2>/dev/null || true
 fi
 
-# Mount Android userdata read-only for the EMMC widget.
-install -d -m 0755 /mnt/emmc
-if ! grep -q 'ys-f66c eMMC userdata' /etc/fstab; then
-	printf '\n# ys-f66c eMMC userdata (Android) read-only for the EMMC widget\nUUID=8028e49a-8638-4f22-9ea0-8a524a598916 /mnt/emmc ext4 ro,nofail,noatime,x-systemd.device-timeout=10s 0 0\n' >> /etc/fstab
+# The eMMC data partition is mounted by board support
+# (ys-f66c-emmc-mount.service); make sure the unit has run.
+if systemctl cat ys-f66c-emmc-mount.service >/dev/null 2>&1; then
+	systemctl start ys-f66c-emmc-mount.service 2>/dev/null || true
 fi
-systemctl daemon-reload 2>/dev/null || true
-mount /mnt/emmc 2>/dev/null || true
 
 if [[ -n "${TARGET_USER}" ]]; then
 	HOME_DIR="$(getent passwd "${TARGET_USER}" | cut -d: -f6)"
@@ -81,7 +85,8 @@ if [[ -n "${TARGET_USER}" ]]; then
 	echo "[overlay] installing into ${HOME_DIR}/.config"
 	install -d -m 0755 "${HOME_DIR}/.config"
 	cp -a "${OVERLAY}/etc/skel/.config/." "${HOME_DIR}/.config/"
-	chown -R "${TARGET_USER}:${TARGET_USER}" "${HOME_DIR}/.config"
+	TARGET_GROUP="$(id -gn "${TARGET_USER}")"
+	chown -R "${TARGET_USER}:${TARGET_GROUP}" "${HOME_DIR}/.config"
 fi
 
 echo "[overlay] done"

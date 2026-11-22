@@ -3,7 +3,7 @@
 # Build the YS-F66C Plasma 6 image.
 #
 # This repository is the desktop layer. Board support (DTS, U-Boot, kernel
-# patches, BSP packages) lives in the public armbian-ys-f66c repository,
+# patches, board packages) lives in the public armbian-ys-f66c repository,
 # pinned in config/versions.env. This script assembles both layers in a
 # work tree and runs the Armbian build framework.
 #

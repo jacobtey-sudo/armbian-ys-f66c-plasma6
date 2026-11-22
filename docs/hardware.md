@@ -56,6 +56,22 @@
 support поднимает виртуальную камеру `/dev/video10` с уже повёрнутой
 картинкой. Приложения видят только её; сырое устройство остаётся root-only.
 
+## Датчик температуры
+
+RK3566 имеет встроенный TSADC. board support включает его в DTB (`&tsadc`).
+После этого работают термотроттлинг CPU/GPU (зоны `soc-thermal` и
+`gpu-thermal`) и датчик температуры:
+
+```sh
+sensors
+cat /sys/class/thermal/thermal_zone0/temp   # миллиградусы
+```
+
+Плагин `ksystemstats_plugin_lmsensors` отдаёт оба датчика в виджет
+«Системный монитор»: `lmsensors/soc_thermal-virtual-0/temp1` (SoC) и
+`lmsensors/gpu_thermal-virtual-0/temp1` (GPU). Вентилятора на планшете нет —
+под нагрузкой частоты снижает троттлинг (75 °C и 85 °C, critical — 115 °C).
+
 ## Ограничения
 
 - MIPI-камер (GC2145/OV5648) на плате нет.

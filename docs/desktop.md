@@ -71,7 +71,7 @@ plasmashell. Это обход падения `QV4::CompiledData::CompilationUni
 - **Yakuake** — выпадающий терминал (автозапуск).
 - **Dolphin**, **Kate**, **Konsole**, **Gwenview**, **System Monitor**,
   **Spectacle**, **Partitionmanager**, **Kamoso** (камера настроена на
-  `/dev/video10`).
+  `/dev/video10`; нужна Mesa из `trixie-backports`, см. `troubleshooting.md`).
 - **Firefox ESR** — браузер.
 - **KDE Connect** — интеграция с телефоном.
 - **FlClash** (arm64) — прокси-клиент; ставится при сборке из

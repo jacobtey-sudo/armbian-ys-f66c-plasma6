@@ -173,6 +173,16 @@ ls -l /dev/video10
 Сырое UVC-устройство доступно только root — это нормально. Если `/dev/video10`
 нет, проверить сервис камеры board support и `dmesg | grep -i uvc`.
 
+Если **Kamoso падает при запуске** с `*** stack smashing detected ***`, это
+ошибка драйвера Mali-G52 («Panfrost») в Mesa 25.0.7, а не самого Kamoso
+(Debian bug #1116427). Падение происходит в `libgallium`; Qt5-приложения на
+GL задевает так же. Исправление вошло в Mesa 25.2. Board support ставит Mesa
+из `trixie-backports`:
+
+```sh
+dpkg -l mesa-libgallium | tail -1   # ожидается 26.1.x, не 25.0.7
+```
+
 ## eMMC и виджет
 
 ```sh

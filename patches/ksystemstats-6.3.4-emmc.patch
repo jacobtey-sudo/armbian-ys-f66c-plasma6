@@ -60,7 +60,7 @@
      const auto volume = device.as<Solid::StorageVolume>();
 -    if (!volume || (volume->isIgnored() && volume->usage() != Solid::StorageVolume::PartitionTable)) {
 +    const auto access = device.as<Solid::StorageAccess>();
-+    // ys-f66c: the eMMC Android userdata partition is flash-backed and may be
++    // ys-f66c: the eMMC data partition is flash-backed and may be
 +    // flagged as a system volume, so the normal hard-disk filter hides it.
 +    // Include it when it is mounted at /mnt/emmc for the EMMC widget.
 +    const bool isEmmcUserdata = access && access->filePath() == QStringLiteral("/mnt/emmc");

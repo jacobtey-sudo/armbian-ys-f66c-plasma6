@@ -55,6 +55,9 @@
   `en`, `ru`.
 - `usr/local/bin/ys-f66c-osk-scale` +
   `usr/share/applications/ys-f66c-osk-scale.desktop` — выбор размера.
+- `usr/local/bin/xdg-open` — снимает `QT_WAYLAND_SHELL_INTEGRATION` от Maliit
+  (с ней Qt-программы падают), обрабатывает схему `ys-osk:`, остальные URL
+  отдаёт `/usr/bin/xdg-open`.
 
 ## Bluetooth
 

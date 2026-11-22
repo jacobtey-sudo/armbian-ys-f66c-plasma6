@@ -22,7 +22,7 @@
 - Раскладки `ru,us`.
 - **Maliit** — экранная клавиатура Plasma: языки en/ru, три профиля размера
   (small/medium/large). Пункт «Settings…» в меню языка открывает
-  `ys-osk:scale` — выбор размера.
+  `ys-osk:scale` — выбор размера; схему обрабатывает `/usr/local/bin/xdg-open`.
 - **SDDM** (X11-гретер) использует Qt Virtual Keyboard; QML-кэш для greeter
   отключён. Maliit в SDDM не используется: у greeter нет Qt 6
   input-context-плагина Maliit.

@@ -102,6 +102,18 @@ ys-f66c-osk-scale --help
 работает. Если клавиатура мешает, поставить `InputMethod=none` в
 `/etc/sddm.conf.d/ys-f66c-inputmethod.conf`.
 
+**«Settings...» не открывает выбор размера.** Maliit выставляет
+`QT_WAYLAND_SHELL_INTEGRATION=inputpanel-shell`. Дочерние Qt-программы
+(`kde-open`, `kdialog`) с ней падают. Проверить обёртку:
+
+```sh
+ls -l /usr/local/bin/xdg-open
+env QT_WAYLAND_SHELL_INTEGRATION=inputpanel-shell xdg-open ys-osk:scale
+```
+
+Обёртка снимает переменную, обрабатывает `ys-osk:` и остальные URL отдаёт
+`/usr/bin/xdg-open`. Если файла нет — заново установить overlay.
+
 ## Звук
 
 ```sh

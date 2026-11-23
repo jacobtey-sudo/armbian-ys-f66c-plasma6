@@ -41,6 +41,21 @@ Documentation is in Russian.
 - Предсозданных пользователей нет: при первом запуске работает штатный
   first-run Armbian.
 
+## Скриншоты
+
+Рабочий стол: панели Plasma, системные мониторы и плазмоид с температурой
+SoC/GPU:
+
+![Рабочий стол Plasma 6](docs/images/plasma-desktop.png)
+
+Экранная клавиатура Maliit (ru/en) над выпадающим терминалом Yakuake:
+
+![Экранная клавиатура Maliit](docs/images/maliit-osk.png)
+
+Меню приложений (Application Dashboard) и состав образа:
+
+![Меню приложений](docs/images/app-dashboard.png)
+
 ## Быстрый старт
 
 Требования к сборочной машине:

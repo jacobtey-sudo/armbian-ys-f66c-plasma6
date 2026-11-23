@@ -53,3 +53,7 @@ cmake --build build -j"$(nproc)"
 `libappletdecorationplugin.so` — не патч, а сборка upstream-апплета
 Window Buttons 0.14.0 под arm64. Исходники и лицензия — в
 [`docs/third-party.md`](../docs/third-party.md).
+
+---
+
+[← Overlay](../overlay/README.md) · [Оглавление](../README.md#документация) · [Участие в проекте →](../CONTRIBUTING.md)

@@ -94,3 +94,7 @@ sudo ./scripts/install-overlay.sh --user <имя>    # ещё и в ~<имя>/.c
 апплеты и плагины выше; источник, лицензия и способ пересборки — в
 [`docs/third-party.md`](../docs/third-party.md) и
 [`patches/README.md`](../patches/README.md).
+
+---
+
+[← Релизы](../docs/release.md) · [Оглавление](../README.md#документация) · [Patches →](../patches/README.md)

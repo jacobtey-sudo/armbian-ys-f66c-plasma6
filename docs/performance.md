@@ -50,3 +50,7 @@ hdparm -tT /dev/mmcblk0
 - VOP2 пишет `_opp_set_regulators: no regulator (vop)`; на работу дисплея не
   влияет, но OPP дисплея не инициализируется.
 - Discover/Qt 6.8.2 — отдельная известная проблема, не связана с CPU.
+
+---
+
+[← Поворот на этапе загрузки](boot-rotation.md) · [Оглавление](../README.md#документация) · [Известные проблемы →](known-issues.md)

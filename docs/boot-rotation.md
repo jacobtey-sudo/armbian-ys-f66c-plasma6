@@ -55,3 +55,7 @@ SDDM-гретер — X11-клиент и не читает пользовате
 - SDDM: заменить `--rotate right` на `--rotate left` в
   `ys-f66c-sddm-xsetup`.
 - KWin: `transform` в `kwinoutputconfig.json` (`Rotated90`/`Rotated270`).
+
+---
+
+[← Рабочий стол](desktop.md) · [Оглавление](../README.md#документация) · [Производительность →](performance.md)

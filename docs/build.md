@@ -118,3 +118,7 @@ dpkg-query -W plasma-desktop libqt6core6
 
 Лог сборки: `build/output/logs/`. Подробная диагностика на устройстве —
 в [troubleshooting.md](troubleshooting.md).
+
+---
+
+[← Архитектура](architecture.md) · [Оглавление](../README.md#документация) · [Запись образа и первый запуск →](flashing.md)

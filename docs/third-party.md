@@ -61,3 +61,7 @@ Plasma, Qt, KDE Frameworks, SDDM, Maliit, WirePlumber и остальные
 
 Оба подключаются на зафиксированных коммитах из
 [`config/versions.env`](../config/versions.env).
+
+---
+
+[← Диагностика](troubleshooting.md) · [Оглавление](../README.md#документация) · [Релизы →](release.md)

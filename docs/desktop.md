@@ -92,3 +92,7 @@ SDDM. Автологин в образе не настроен; если он п
 ```sh
 sudo ./scripts/install-overlay.sh --user <имя>
 ```
+
+---
+
+[← Железо](hardware.md) · [Оглавление](../README.md#документация) · [Поворот на этапе загрузки →](boot-rotation.md)

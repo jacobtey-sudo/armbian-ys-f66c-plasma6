@@ -69,3 +69,7 @@ sudo armbian-install --target /dev/mmcblk0 --boot emmc --fs ext4 --yes
 
 UART2, **1500000 8N1**. В `bootenv` включён `earlycon`; лог загрузки виден
 с первых строк. Подробности — в [troubleshooting.md](troubleshooting.md).
+
+---
+
+[← Сборка](build.md) · [Оглавление](../README.md#документация) · [Железо →](hardware.md)

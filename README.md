@@ -1,5 +1,32 @@
 # YS-F66C: Plasma 6
 
+<details name="screenshots" id="shot-1" open>
+<summary>1 / 3</summary>
+
+![Рабочий стол Plasma 6](docs/images/plasma-desktop.png)
+
+[←](#shot-3) · [→](#shot-2)
+
+</details>
+
+<details name="screenshots" id="shot-2">
+<summary>2 / 3</summary>
+
+![Экранная клавиатура Maliit](docs/images/maliit-osk.png)
+
+[←](#shot-1) · [→](#shot-3)
+
+</details>
+
+<details name="screenshots" id="shot-3">
+<summary>3 / 3</summary>
+
+![Меню приложений](docs/images/app-dashboard.png)
+
+[←](#shot-2) · [→](#shot-1)
+
+</details>
+
 Desktop-слой и сборка образа **KDE Plasma 6** для планшета **Yisheng YS-F66C**
 на SoC **Rockchip RK3566**.
 
@@ -40,21 +67,6 @@ Documentation is in Russian.
   SHA256 проверяется; `.deb` в git не хранится.
 - Предсозданных пользователей нет: при первом запуске работает штатный
   first-run Armbian.
-
-## Скриншоты
-
-Рабочий стол: панели Plasma, системные мониторы и плазмоид с температурой
-SoC/GPU:
-
-![Рабочий стол Plasma 6](docs/images/plasma-desktop.png)
-
-Экранная клавиатура Maliit (ru/en) над выпадающим терминалом Yakuake:
-
-![Экранная клавиатура Maliit](docs/images/maliit-osk.png)
-
-Меню приложений (Application Dashboard) и состав образа:
-
-![Меню приложений](docs/images/app-dashboard.png)
 
 ## Быстрый старт
 

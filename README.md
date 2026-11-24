@@ -1,6 +1,6 @@
 # YS-F66C: Plasma 6
 
-[![Рабочий стол Plasma 6](docs/images/plasma-desktop.png)](docs/slideshow.html "Слайд-шоу: ещё два снимка")
+[![Рабочий стол Plasma 6](docs/images/plasma-desktop.png)](https://jacobtey-sudo.github.io/armbian-ys-f66c-plasma6/slideshow.html "Слайд-шоу: ещё два снимка")
 
 Desktop-слой и сборка образа **KDE Plasma 6** для планшета **Yisheng YS-F66C**
 на SoC **Rockchip RK3566**.

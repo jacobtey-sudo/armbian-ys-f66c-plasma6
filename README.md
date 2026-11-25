@@ -45,6 +45,11 @@ Documentation is in Russian.
 
 ## Быстрый старт
 
+Готовый образ — в [Releases](https://github.com/jacobtey-sudo/armbian-ys-f66c-plasma6/releases):
+`.img.xz` 1,77 ГиБ, рядом `.sha256` и отчёт сборки. Это **pre-release**:
+образ проверен, но полный smoke-тест после прошивки не проходил. Сборка из
+исходников — ниже.
+
 Требования к сборочной машине:
 
 - Linux x86_64;

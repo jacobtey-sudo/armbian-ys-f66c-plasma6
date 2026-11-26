@@ -69,7 +69,9 @@ cd armbian-ys-f66c-plasma6
 кэшей Armbian. Подробности — в [docs/build.md](docs/build.md).
 
 Запись на microSD, первый запуск и установка на eMMC —
-в [docs/flashing.md](docs/flashing.md).
+в [docs/flashing.md](docs/flashing.md). После прошивки запустите
+[`scripts/smoke-test.sh`](scripts/smoke-test.sh); политика обновлений —
+в [docs/updates.md](docs/updates.md).
 
 ## Документация
 
@@ -78,17 +80,21 @@ cd armbian-ys-f66c-plasma6
 | [docs/architecture.md](docs/architecture.md) | Слои, сборка, пины, overlay |
 | [docs/build.md](docs/build.md) | Требования, сборка, проверка, артефакты |
 | [docs/flashing.md](docs/flashing.md) | Запись образа, первый запуск, eMMC |
+| [docs/recovery.md](docs/recovery.md) | UART, загрузка с microSD, fsck, backup/restore eMMC |
+| [docs/updates.md](docs/updates.md) | Обновления apt, hold board-пакетов, откат |
 | [docs/hardware.md](docs/hardware.md) | Железо, порты, ревизии Wi-Fi/BT |
 | [docs/desktop.md](docs/desktop.md) | Что настраивает overlay в Plasma |
 | [docs/boot-rotation.md](docs/boot-rotation.md) | Поворот консоли, SDDM и KWin |
 | [docs/performance.md](docs/performance.md) | CPU, накопители, GPU, память |
 | [docs/known-issues.md](docs/known-issues.md) | Известные проблемы и обходы |
 | [docs/troubleshooting.md](docs/troubleshooting.md) | Диагностика на устройстве |
+| [docs/faq.md](docs/faq.md) | Частые вопросы: совместимость, обновления, железо |
 | [docs/third-party.md](docs/third-party.md) | Сторонние компоненты и лицензии |
 | [docs/release.md](docs/release.md) | Артефакты, checksums, релизы |
 | [overlay/README.md](overlay/README.md) | Полный состав overlay |
 | [patches/README.md](patches/README.md) | Патчи и как их пересобрать |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Правила коммитов и проверки |
+| [SECURITY.md](SECURITY.md) | Как сообщить об уязвимости |
 
 ## Структура
 

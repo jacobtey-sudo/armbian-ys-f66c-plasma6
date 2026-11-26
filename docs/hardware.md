@@ -82,4 +82,4 @@ cat /sys/class/thermal/thermal_zone0/temp   # миллиградусы
 
 ---
 
-[← Запись образа и первый запуск](flashing.md) · [Оглавление](../README.md#документация) · [Рабочий стол →](desktop.md)
+[← Обновления](updates.md) · [Оглавление](../README.md#документация) · [Рабочий стол →](desktop.md)

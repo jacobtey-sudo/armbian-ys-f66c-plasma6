@@ -19,13 +19,13 @@ vdd_cpu: tcs4525@1c {
 `schedutil`. Если снова появится 816 МГц — проверить
 `dmesg | grep -E 'cpu cpu0|cpufreq|fan53555'`.
 
-## Нет thermal-зон — tsadc выключен
+## TSADC — исправлено
 
-`/sys/class/thermal` содержит только cooling devices, без `thermal_zone*`:
-узел `tsadc@fe710000` в `rk356x.dtsi` имеет `status = "disabled"`, а DTS
-платы его не включает. `CONFIG_ROCKCHIP_THERMAL=y` в ядре есть.
+Раньше `/sys/class/thermal` содержал только cooling devices, без
+`thermal_zone*`: узел `tsadc@fe710000` был выключен, поэтому не было
+штатного троттлинга.
 
-Сниппет исправления для board support (в текущем образе не включён):
+В board support (коммит `b55b7e0`) добавлено:
 
 ```dts
 &tsadc {
@@ -33,9 +33,22 @@ vdd_cpu: tcs4525@1c {
 };
 ```
 
-Появятся `soc-thermal` (канал 0) и `gpu-thermal` (канал 1), температуры в
-`/sys/class/thermal/thermal_zone*/temp` (milli-°C) и штатный троттлинг по
-трип-поинтам. Это температура кристалла SoC, не корпуса и не АКБ.
+В образе `v26.11.0` работают зоны `soc-thermal` и `gpu-thermal`, датчики
+`/sys/class/thermal/thermal_zone*/temp` (milli-°C) и троттлинг по
+75/85 °C, critical — 115 °C. Это температура кристалла SoC, не корпуса
+и не АКБ.
+
+Проверка:
+
+```sh
+ls /sys/class/thermal/thermal_zone*
+cat /sys/class/thermal/thermal_zone*/type
+cat /sys/class/thermal/thermal_zone*/temp
+sensors
+```
+
+Если зон нет — проверить, что загружен DTB из board support с `&tsadc`,
+и посмотреть `dmesg | grep -i tsadc`.
 
 ## Поворот заставки Plymouth
 

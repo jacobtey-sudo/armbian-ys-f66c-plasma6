@@ -1,6 +1,22 @@
 # Запись образа и первый запуск
 
-## Проверка образа
+## Готовый образ из Releases
+
+Скачайте в один каталог три файла из релиза: `.img.xz`,
+`.img.xz.sha256` и `.img.txt`. Проверьте архив:
+
+```sh
+cd ~/Downloads
+sha256sum -c *.img.xz.sha256
+xz -t *.img.xz
+```
+
+`sha256sum` должен сказать `OK`, `xz -t` — завершиться без ошибок. Если
+хэш не совпал, скачайте файл заново.
+
+## Своя сборка
+
+Если образ собран локально, проверяется несжатый `.img`:
 
 ```sh
 cd build/output/images
@@ -12,12 +28,23 @@ sha256sum -c *.img.sha
 **Внимание:** `/dev/sdX` — это именно карта, а не системный диск. Проверьте
 `lsblk` перед записью.
 
+Готовый архив можно писать потоком, без распаковки на диск:
+
+```sh
+xz -dc Armbian-*.img.xz | sudo dd of=/dev/sdX bs=4M status=progress conv=fsync
+sync
+```
+
+Если используется несжатый `.img`:
+
 ```sh
 sudo dd if=Armbian-*.img of=/dev/sdX bs=4M status=progress conv=fsync
 sync
 ```
 
 Подойдут также balenaEtcher и Raspberry Pi Imager («Use custom image»).
+BalenaEtcher понимает `.img.xz` напрямую; если программа не открывает
+архив, распакуйте его (`xz -dk *.img.xz`) и укажите `.img`.
 После записи карта вставляется в планшет, питание подаётся через PoE.
 
 ## Первый запуск

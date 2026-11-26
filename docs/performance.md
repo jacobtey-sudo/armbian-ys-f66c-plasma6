@@ -13,6 +13,8 @@
 
 - DTS: `vdd_cpu` переведён на `tcs,tcs452x` по адресу `0x1c`.
 - После перезагрузки: `vdd_cpu` 1025 мВ, CPU до **1608 МГц**.
+- TSADC включён (board support `b55b7e0`): работают `soc-thermal` и
+  `gpu-thermal`, температуры и троттлинг CPU/GPU.
 - Governor: `schedutil` через `ys-f66c-cpufreq-governor.service`.
 - Rootfs: ext4; swap — zram, не на накопитель.
 - Эффекты KWin (blur, contrast, анимации) отключены в `kwinrc`.
@@ -38,15 +40,16 @@ for r in /sys/class/regulator/regulator.*; do
   [ "$(cat "$r/name")" = vdd_cpu ] && cat "$r/state" "$r/microvolts"
 done
 hdparm -tT /dev/mmcblk0
+cat /sys/class/thermal/thermal_zone*/type
+cat /sys/class/thermal/thermal_zone*/temp
 ```
 
-Ожидаемо: `schedutil`, частота до `1608000`, `vdd_cpu` enabled ~`1025000`
-мкВ, eMMC заметно быстрее microSD.
+Ожидаемо: `schedutil`, частота до `1608000`, `vdd_cpu` enabled
+~`1025000` мкВ, eMMC заметно быстрее microSD, зоны `soc-thermal` и
+`gpu-thermal` с температурой в milli-°C.
 
 ## Осталось
 
-- Нет `thermal_zone*`: штатного thermal throttling сейчас нет (см.
-  [known-issues.md](known-issues.md#нет-thermal-зон--tsadc-выключен)).
 - VOP2 пишет `_opp_set_regulators: no regulator (vop)`; на работу дисплея не
   влияет, но OPP дисплея не инициализируется.
 - Discover/Qt 6.8.2 — отдельная известная проблема, не связана с CPU.

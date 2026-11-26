@@ -1,0 +1,72 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Скрипты и пробелы
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Пробелы в конце строк
+        run: |
+          git log -1 --check --format='%h %s'
+          if git grep -nI -E '[[:blank:]]+$' -- '*.md' '*.sh' '*.yml' '*.yaml' '*.env' '*.py'; then
+            echo "В файлах есть пробелы в конце строк" >&2
+            exit 1
+          fi
+
+      - name: Установить shellcheck
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq shellcheck
+
+      - name: Синтаксис shell
+        run: |
+          bash -n scripts/*.sh
+          sh -n overlay/usr/local/bin/*
+
+      - name: ShellCheck
+        run: |
+          shellcheck -S warning scripts/*.sh
+          shellcheck -S warning overlay/usr/local/bin/*
+
+  docs:
+    name: Ссылки и YAML
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Установить PyYAML
+        run: python3 -m pip install --quiet pyyaml
+
+      - name: Проверить YAML
+        run: |
+          python3 - <<'PY'
+          import glob
+          import yaml
+
+          files = sorted(
+              glob.glob(".github/**/*.yml", recursive=True)
+              + glob.glob(".github/**/*.yaml", recursive=True)
+          )
+          for path in files:
+              with open(path, encoding="utf-8") as handle:
+                  yaml.safe_load(handle)
+          print(f"YAML ok: {len(files)} файлов")
+          PY
+
+      - name: Проверить локальные ссылки и якоря
+        run: python3 scripts/check-links.py

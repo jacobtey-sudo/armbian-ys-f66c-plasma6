@@ -15,6 +15,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # git log --check needs the parent commit, so keep full history.
+          fetch-depth: 0
 
       - name: Пробелы в конце строк
         run: |

@@ -8,8 +8,8 @@
 | Слой | Источник | Содержимое |
 | --- | --- | --- |
 | Сборочный фреймворк | `armbian/build` | Docker, rootfs, пакеты, упаковка образа |
-| Board support | `armbian-ys-f66c` | DTS, U-Boot, патчи ядра, board-конфиг |
-| Desktop Plasma 6 | этот репозиторий | `overlay/`, `scripts/`, `docs/`, пины |
+| Board support | `armbian-ys-f66c` | DTS, U-Boot, патчи ядра, board-файл, консольная база |
+| Desktop Plasma 6 | этот репозиторий | board-конфиг, extension, `overlay/`, `customize-image.sh`, пины |
 
 Коммиты и версии — только в [`config/versions.env`](../config/versions.env).
 
@@ -44,8 +44,9 @@ cd armbian-ys-f66c-plasma6
    `ARMBIAN_BUILD_COMMIT`;
 2. клонирует board support в `./build/userpatches` и переключает на
    `ARMBIAN_BASE_COMMIT`;
-3. копирует `overlay/` поверх `userpatches/overlay/`;
-4. запускает `./compile.sh ys-f66c-trixie build`.
+3. копирует desktop-слой в `userpatches`: board-конфиг, extension,
+   `customize-image.sh` и `overlay/`;
+4. запускает `./compile.sh ys-f66c-plasma6 build`.
 
 Рабочее дерево можно вынести:
 
@@ -68,14 +69,23 @@ git clone https://github.com/jacobtey-sudo/armbian-ys-f66c.git \
     ~/ys-build/userpatches
 git -C ~/ys-build/userpatches checkout --detach <ARMBIAN_BASE_COMMIT>
 
+install -D -m 0644 config/board/config-ys-f66c-plasma6.conf \
+    ~/ys-build/userpatches/config-ys-f66c-plasma6.conf
+install -D -m 0644 extensions/ys-f66c-plasma6.sh \
+    ~/ys-build/userpatches/extensions/ys-f66c-plasma6.sh
+install -D -m 0755 customize-image.sh \
+    ~/ys-build/userpatches/customize-image.sh
 cp -a overlay/. ~/ys-build/userpatches/overlay/
 
 cd ~/ys-build
-./compile.sh ys-f66c-trixie build
+./compile.sh ys-f66c-plasma6 build
 ```
 
 `<ARMBIAN_BUILD_COMMIT>` и `<ARMBIAN_BASE_COMMIT>` берутся из
 `config/versions.env`.
+
+Пин `ARMBIAN_BASE_COMMIT` указывает на коммит до разделения. Сборку с новым
+коммитом base нужно сначала проверить на microSD, затем сдвинуть пин.
 
 ## Проверка результата
 

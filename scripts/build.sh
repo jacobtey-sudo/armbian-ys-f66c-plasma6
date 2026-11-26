@@ -3,7 +3,7 @@
 # Build the YS-F66C Plasma 6 image.
 #
 # This repository is the desktop layer. Board support (DTS, U-Boot, kernel
-# patches, board packages) lives in the public armbian-ys-f66c repository,
+# patches, console base) lives in the public armbian-ys-f66c repository,
 # pinned in config/versions.env. This script assembles both layers in a
 # work tree and runs the Armbian build framework.
 #
@@ -18,7 +18,7 @@ REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "${REPO_DIR}/config/versions.env"
 
 WORKDIR="${WORKDIR:-${REPO_DIR}/build}"
-BOARD_CONFIG="${BOARD_CONFIG:-ys-f66c-trixie}"
+BOARD_CONFIG="${BOARD_CONFIG:-ys-f66c-plasma6}"
 
 log() { printf '[build] %s\n' "$*" >&2; }
 
@@ -39,37 +39,43 @@ git -C "${WORKDIR}" fetch --all --tags
 git -C "${WORKDIR}" checkout --detach "${ARMBIAN_BUILD_COMMIT}"
 
 USERPATCHES="${WORKDIR}/userpatches"
+MANIFEST="${USERPATCHES}/.ys-f66c-plasma6-files.list"
+
+BOARD_SRC="${REPO_DIR}/config/board/config-${BOARD_CONFIG}.conf"
+BOARD_DST="${USERPATCHES}/config-${BOARD_CONFIG}.conf"
+EXTENSION_SRC="${REPO_DIR}/extensions/ys-f66c-plasma6.sh"
+EXTENSION_DST="${USERPATCHES}/extensions/ys-f66c-plasma6.sh"
+CUSTOMIZE_SRC="${REPO_DIR}/customize-image.sh"
+CUSTOMIZE_DST="${USERPATCHES}/customize-image.sh"
 OVERLAY_SRC="${REPO_DIR}/overlay"
 OVERLAY_DST="${USERPATCHES}/overlay"
-# Kept inside userpatches: the Armbian build checks its own tree for changes.
-OVERLAY_MANIFEST="${USERPATCHES}/.ys-f66c-plasma6-overlay.list"
 
-# Remove now-empty directories up to (but not including) the overlay root.
+# Remove now-empty directories up to (but not including) userpatches.
 prune_empty_dirs() {
 	local dir="$1"
-	while [[ "${dir}" == "${OVERLAY_DST}/"* ]]; do
+	while [[ "${dir}" == "${USERPATCHES}/"* ]]; do
 		rmdir "${dir}" 2>/dev/null || break
 		dir="$(dirname "${dir}")"
 	done
 }
 
-# Files copied by an earlier run must not linger after they leave the overlay.
-# The board support repo tracks its own overlay content, so restore tracked
-# files and delete only the untracked files this script added before.
-clean_stale_overlay() {
-	[[ -f "${OVERLAY_MANIFEST}" ]] || return 0
-	log "removing stale overlay files from the previous run"
+# Files copied by an earlier run must not linger after they leave this repo.
+# Restore tracked board-support files and delete only the untracked files this
+# script added before.
+clean_stale_files() {
+	[[ -f "${MANIFEST}" ]] || return 0
+	log "removing files from the previous run"
 	while IFS= read -r rel; do
 		[[ -n "${rel}" ]] || continue
-		[[ -e "${OVERLAY_DST}/${rel}" || -L "${OVERLAY_DST}/${rel}" ]] || continue
-		if git -C "${USERPATCHES}" ls-files --error-unmatch "overlay/${rel}" >/dev/null 2>&1; then
-			git -C "${USERPATCHES}" checkout -- "overlay/${rel}"
+		[[ -e "${USERPATCHES}/${rel}" || -L "${USERPATCHES}/${rel}" ]] || continue
+		if git -C "${USERPATCHES}" ls-files --error-unmatch "${rel}" >/dev/null 2>&1; then
+			git -C "${USERPATCHES}" checkout -- "${rel}"
 		else
-			rm -f "${OVERLAY_DST}/${rel}"
-			prune_empty_dirs "$(dirname "${OVERLAY_DST}/${rel}")"
+			rm -f "${USERPATCHES}/${rel}"
+			prune_empty_dirs "$(dirname "${USERPATCHES}/${rel}")"
 		fi
-	done < "${OVERLAY_MANIFEST}"
-	rm -f "${OVERLAY_MANIFEST}"
+	done < "${MANIFEST}"
+	rm -f "${MANIFEST}"
 }
 
 if [[ ! -d "${USERPATCHES}/.git" ]]; then
@@ -79,26 +85,39 @@ fi
 
 log "pinning board support at ${ARMBIAN_BASE_COMMIT}"
 git -C "${USERPATCHES}" fetch --all
-# Drop the overlay copy from an earlier run so a pin change checks out cleanly.
-git -C "${USERPATCHES}" checkout -- overlay 2>/dev/null || true
+# Drop copies from an earlier run so a pin change checks out cleanly.
+clean_stale_files
+git -C "${USERPATCHES}" checkout -- . 2>/dev/null || true
+rm -f "${USERPATCHES}/.ys-f66c-plasma6-overlay.list"
 git -C "${USERPATCHES}" checkout --detach "${ARMBIAN_BASE_COMMIT}"
 
-clean_stale_overlay
-
-log "applying Plasma 6 desktop overlay"
+for src in "${BOARD_SRC}" "${EXTENSION_SRC}" "${CUSTOMIZE_SRC}"; do
+	[[ -f "${src}" ]] || {
+		echo "missing desktop layer file: ${src}" >&2
+		exit 1
+	}
+done
 [[ -d "${OVERLAY_SRC}" ]] || {
 	echo "overlay not found: ${OVERLAY_SRC}" >&2
 	exit 1
 }
+
+log "applying the Plasma 6 desktop layer"
+install -D -m 0644 "${BOARD_SRC}" "${BOARD_DST}"
+install -D -m 0644 "${EXTENSION_SRC}" "${EXTENSION_DST}"
+install -D -m 0755 "${CUSTOMIZE_SRC}" "${CUSTOMIZE_DST}"
+printf '%s\n' \
+	"config-${BOARD_CONFIG}.conf" \
+	"extensions/ys-f66c-plasma6.sh" \
+	"customize-image.sh" > "${MANIFEST}"
+
+# Board support ships no overlay; this repository owns the whole directory.
+rm -rf "${OVERLAY_DST}"
 mkdir -p "${OVERLAY_DST}"
 cp -a "${OVERLAY_SRC}/." "${OVERLAY_DST}/"
-# Record what we copied, so the next run removes files that disappear.
-(cd "${OVERLAY_SRC}" && find . -mindepth 1 ! -type d -printf '%P\n' | sort) > "${OVERLAY_MANIFEST}"
 
 log "writing runtime pins (/etc/ys-f66c/versions.env)"
 "${REPO_DIR}/scripts/gen-runtime-pins.sh" "${OVERLAY_DST}/etc/ys-f66c/versions.env"
-# The generated file is ours too; clean it up if a later run stops writing it.
-echo "etc/ys-f66c/versions.env" >> "${OVERLAY_MANIFEST}"
 
 log "running Armbian build (${BOARD_CONFIG})"
 cd "${WORKDIR}"

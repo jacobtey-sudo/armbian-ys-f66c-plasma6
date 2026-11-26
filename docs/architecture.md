@@ -8,12 +8,13 @@
 | Слой | Репозиторий | Что содержит |
 | --- | --- | --- |
 | Сборочный фреймворк | [`armbian/build`](https://github.com/armbian/build) | Docker-окружение, rootfs, установка пакетов, сборка образа |
-| Board support | [`armbian-ys-f66c`](https://github.com/jacobtey-sudo/armbian-ys-f66c) | DTS, U-Boot, патчи ядра, board-конфиг, хуки железа |
-| Desktop-слой | этот репозиторий | overlay Plasma 6, скрипты, документация, пины |
+| Board support и консоль | [`armbian-ys-f66c`](https://github.com/jacobtey-sudo/armbian-ys-f66c) | DTS, U-Boot, патчи ядра, board-файл, железные хуки и сервисы, консольный config |
+| Desktop-слой | этот репозиторий | board-конфиг Plasma 6, extension с KDE/SDDM-хуками, overlay, скрипты, документация, пины |
 
 Board support подключается как `userpatches`: Armbian берёт оттуда
-`config/boards/*.csc`, `kernel/`, `bootenv/`, `packages/` и `overlay/`.
-Desktop-слой накладывается поверх него.
+`config/boards/*.csc`, `kernel/`, `bootenv/`, `packages/` и
+`customize-image.sh`. Desktop-слой добавляет board-конфиг, extension и
+overlay. Board support не устанавливает рабочий стол.
 
 ## Порядок сборки
 
@@ -22,65 +23,67 @@ Desktop-слой накладывается поверх него.
 1. клонирует `armbian/build` и переключает на `ARMBIAN_BUILD_COMMIT`;
 2. клонирует board support в `userpatches` и переключает на
    `ARMBIAN_BASE_COMMIT`;
-3. копирует `overlay/` этого репозитория поверх `userpatches/overlay/`;
-4. запускает `./compile.sh ys-f66c-trixie build` из `WORKDIR`.
+3. копирует desktop-слой:
+   - `config/board/config-ys-f66c-plasma6.conf` → `userpatches/config-*.conf`;
+   - `extensions/ys-f66c-plasma6.sh` → `userpatches/extensions/`;
+   - `customize-image.sh` → `userpatches/customize-image.sh`;
+   - `overlay/` → `userpatches/overlay/`;
+4. запускает `./compile.sh ys-f66c-plasma6 build` из `WORKDIR`.
 
-Дальше Armbian собирает ядро и rootfs, применяет `userpatches/overlay/`,
-выполняет хуки board-конфига (`post_family_tweaks`, `post_family_tweaks_bsp`)
-и упаковывает образ.
+Board-конфиг включает extension. Extension добавляет desktop-пакеты через
+`add_packages_to_image` и KDE/SDDM-хуки через `post_family_tweaks*`.
+`customize-image.sh` копирует overlay, ставит Mesa из backports и FlClash.
+
+Дальше Armbian собирает ядро и rootfs, выполняет хуки board-файла и
+extension, применяет overlay и упаковывает образ.
 
 ```text
 config/versions.env
         │
         ├── armbian/build @ ARMBIAN_BUILD_COMMIT
-        │        └── compile.sh ys-f66c-trixie build
+        │        └── compile.sh ys-f66c-plasma6 build
         │
         ├── armbian-ys-f66c @ ARMBIAN_BASE_COMMIT
-        │        └── userpatches/ (DTS, board-конфиг, хуки)
+        │        └── userpatches/ (DTS, board-файл, консольная база)
         │
-        └── overlay/ этого репозитория
-                 └── поверх userpatches/overlay/
+        └── desktop-слой этого репозитория
+                 ├── config/board/config-ys-f66c-plasma6.conf
+                 ├── extensions/ys-f66c-plasma6.sh
+                 ├── customize-image.sh
+                 └── overlay/
                           └── output/images/*.img
 ```
 
-## Приоритет overlay
+## Overlay и хуки
 
-Файлы с одинаковыми путями берутся из этого репозитория: `build.sh` копирует
-`overlay/.` поверх board-support. Поэтому desktop-настройки живут здесь,
-а board-support отвечает за железо и системные хуки.
+Board support не содержит overlay. Desktop-слой — единственный источник
+overlay и desktop-настроек. `build.sh` копирует `overlay/.` в
+`userpatches/overlay/`.
 
-Если хук board-конфига пишет тот же файл, что и overlay, побеждает тот, кто
-выполняется позже. Для системных настроек (`/etc/xdg`, `/etc/skel`) оба слоя
-пишут согласованное содержимое — это проверяется при изменении.
+Если extension и overlay пишут один файл, побеждает тот, кто выполняется
+позже. Для системных настроек (`/etc/xdg`, `/etc/skel`) оба слоя пишут
+согласованное содержимое — это проверяется при изменении.
 
-## Разделение board-support и desktop (план)
+## Разделение board-support и desktop
 
-Сейчас `armbian-ys-f66c` собирает десктоп сам: `BUILD_DESKTOP=yes`,
-`DESKTOP_ENVIRONMENT=kde-plasma`, desktop-overlay и KDE-хуки в
-`config/boards/ys-f66c.csc`. Его `config-ys-f66c.conf` указывает на `noble`
-(Plasma 5), который больше не собирают, а overlay дублирует overlay этого
-репозитория. Отличия: `etc/xdg/*` есть только здесь, `psd.service` — только
-там.
-
-Целевая структура:
+Разделение реализовано:
 
 - `armbian-ys-f66c` — board support и консольная база: ядро, DTS, U-Boot,
-  железные хуки и сервисы. `BUILD_DESKTOP=no`, без desktop-overlay.
+  железные хуки и сервисы. `BUILD_DESKTOP=no`, без overlay и KDE-хуков.
 - `armbian-ys-f66c-plasma6` — десктоп: board-конфиг
-  `config-ys-f66c-plasma6.conf`, overlay Plasma 6 и KDE/SDDM-хуки;
-  `build.sh` кладёт конфиг в `userpatches`.
+  `config/board/config-ys-f66c-plasma6.conf`, extension
+  `extensions/ys-f66c-plasma6.sh`, `customize-image.sh` и overlay.
 
-Порядок работ (нужна пересборка и проверка на microSD):
+Extension добавляет пакеты `kamoso`, Maliit, `yakuake`, `synaptic` и
+`plasma-widgets-addons`, а также хуки powerdevil, системного звонка, SDDM,
+поворота тача и QML-кэша.
 
-1. перенести desktop-хуки и пакеты из `ys-f66c.csc` в plasma6;
-2. убрать desktop-overlay из базового репозитория;
-3. включить в base `BUILD_DESKTOP=no` и убрать `noble`-конфиг;
-4. добавить board-конфиг в plasma6 и копировать его в `build.sh`;
-5. пересобрать образ, проверить и только затем сдвинуть
-   `ARMBIAN_BASE_COMMIT` на новый коммит base.
+`ARMBIAN_BASE_COMMIT` пока указывает на коммит до разделения: образ
+`v26.11.0` собран из него. Порядок перехода:
 
-Пока пересборка не сделана, пин в `config/versions.env` не меняется: образ
-`v26.11.0` собран из текущего коммита base.
+1. пересобрать образ с новым коммитом base;
+2. проверить загрузку и рабочий стол на microSD;
+3. отдельным коммитом сдвинуть `ARMBIAN_BASE_COMMIT` на этот коммит.
 
 ## Пины
 

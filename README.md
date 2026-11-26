@@ -99,11 +99,12 @@ cd armbian-ys-f66c-plasma6
 ## Структура
 
 ```text
-config/     версии и пины (versions.env — источник истины)
-docs/       архитектура, сборка, прошивка, железо, проблемы
-overlay/    файлы, которые попадают в образ как есть
-patches/    патчи к Plasma/KWin/пакетам и инструкции по пересборке
-scripts/    build.sh и install-overlay.sh
+config/      пины (versions.env) и board-конфиг Plasma 6 (board/)
+extensions/  desktop-пакеты и KDE/SDDM-хуки
+docs/        архитектура, сборка, прошивка, железо, проблемы
+overlay/     файлы, которые попадают в образ как есть
+patches/     патчи к Plasma/KWin/пакетам и инструкции по пересборке
+scripts/     build.sh и install-overlay.sh
 ```
 
 ## Слои
@@ -111,8 +112,8 @@ scripts/    build.sh и install-overlay.sh
 | Слой | Где | Содержимое |
 | --- | --- | --- |
 | Сборочный фреймворк | `armbian/build` (pinned) | Docker-сборка, rootfs, пакеты, образ |
-| Board support | `armbian-ys-f66c` (pinned) | DTS, U-Boot, патчи ядра, board-конфиг, железные хуки |
-| Desktop-слой | этот репозиторий | overlay Plasma 6, скрипты, пины, документация |
+| Board support | `armbian-ys-f66c` (pinned) | DTS, U-Boot, патчи ядра, board-файл, консольная база |
+| Desktop-слой | этот репозиторий | board-конфиг Plasma 6, extension, overlay, скрипты, пины |
 
 `scripts/build.sh` собирает все три слоя в одном рабочем дереве. Ручная
 сборка и правила обновления пинов — в [docs/architecture.md](docs/architecture.md).
@@ -151,6 +152,6 @@ GPL-2.0-only. См. [LICENSE](LICENSE). Сторонние компоненты 
 ## Связанные проекты
 
 - [armbian-ys-f66c](https://github.com/jacobtey-sudo/armbian-ys-f66c) —
-  board support: DTS, U-Boot, патчи ядра, board-конфиг.
+  board support: DTS, U-Boot, патчи ядра, консольная база.
 - [Armbian build framework](https://github.com/armbian/build) — сборочная
   инфраструктура.

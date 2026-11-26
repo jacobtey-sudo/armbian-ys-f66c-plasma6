@@ -1,8 +1,9 @@
 # Overlay
 
-Файлы, которые попадают в образ как есть. `scripts/build.sh` копирует
-`overlay/.` поверх board support, а `scripts/install-overlay.sh` ставит то же
-самое на живую систему.
+Файлы, которые попадают в образ как есть. Board support не содержит overlay:
+этот каталог — единственный источник. `scripts/build.sh` копирует `overlay/.`
+в `userpatches/overlay/`, а `scripts/install-overlay.sh` ставит то же самое на
+живую систему.
 
 ## Пользовательские настройки (`/etc/skel`)
 
@@ -20,6 +21,8 @@
 - `.config/gtk-3.0/`, `gtk-4.0/`, `gtkrc*` — оформление GTK под Breeze.
 - `.config/powerdevilrc`, `powermanagementprofilesrc` — DPMS и питание.
 - `.config/autostart/` — Yakuake; pasystray не запускается.
+- `.config/systemd/user/default.target.wants/psd.service` — включает
+  `psd.service` (profile-sync-daemon) в пользовательской сессии.
 - Остальные `*-rc` — настройки Dolphin, Kate, Konsole, Gwenview, Kamoso,
   Spectacle, System Monitor и т. п.
 
@@ -71,7 +74,7 @@
 - `usr/local/bin/ys-f66c-install-flclash` — ставит FlClash (arm64) из
   зафиксированного релиза, SHA256 проверяется, `.deb` в git не хранится.
   Версию и checksum скрипт читает из `/etc/ys-f66c/versions.env`;
-  `customize-image.sh` board support запускает скрипт при сборке образа.
+  `customize-image.sh` этого репозитория запускает скрипт при сборке образа.
 
 ## Установка на живую систему
 

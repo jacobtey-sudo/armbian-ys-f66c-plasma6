@@ -12,12 +12,14 @@
    `ARMBIAN_BUILD_COMMIT`;
 2. клонирует board support `armbian-ys-f66c` в `WORKDIR/userpatches` и
    переключает на `ARMBIAN_BASE_COMMIT`;
-3. удаляет overlay прошлого запуска: возвращает отслеживаемые board-support
+3. удаляет файлы прошлого запуска: возвращает отслеживаемые board-support
    файлы и удаляет только свои untracked-файлы (манифест —
-   `userpatches/.ys-f66c-plasma6-overlay.list`);
-4. копирует `overlay/.` поверх `userpatches/overlay/`;
-5. пишет `/etc/ys-f66c/versions.env` через `gen-runtime-pins.sh`;
-6. запускает `./compile.sh "$BOARD_CONFIG" build`.
+   `userpatches/.ys-f66c-plasma6-files.list`);
+4. копирует desktop-слой в `userpatches`: board-конфиг, extension и
+   `customize-image.sh`;
+5. копирует `overlay/.` в `userpatches/overlay/`;
+6. пишет `/etc/ys-f66c/versions.env` через `gen-runtime-pins.sh`;
+7. запускает `./compile.sh "$BOARD_CONFIG" build`.
 
 По умолчанию `WORKDIR=./build` (в `.gitignore`). Переопределение:
 
@@ -26,7 +28,7 @@ WORKDIR=~/ys-build ./scripts/build.sh
 ```
 
 Переменные читаются из `config/versions.env`; `BOARD_CONFIG` можно
-переопределить окружением (по умолчанию `ys-f66c-trixie`).
+переопределить окружением (по умолчанию `ys-f66c-plasma6`).
 
 Результат: `$WORKDIR/output/images/*.img` (+ `.sha` / `.txt`), лог —
 `$WORKDIR/output/logs/`.

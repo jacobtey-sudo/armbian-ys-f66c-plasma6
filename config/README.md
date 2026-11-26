@@ -16,7 +16,8 @@
 - `ARMBIAN_BUILD_REPO` / `ARMBIAN_BUILD_COMMIT` — сборочный фреймворк Armbian;
 - `ARMBIAN_BASE_REPO` / `ARMBIAN_BASE_COMMIT` — board support
   (`armbian-ys-f66c`), который кладётся в `userpatches`;
-- `BOARD_CONFIG` — имя board-конфига (`config-<name>.conf`) из board support;
+- `BOARD_CONFIG` — имя board-конфига из этого репозитория
+  (`config/board/config-<name>.conf`);
 - `DISTRO`, `PLASMA_VERSION`, `QT_VERSION`, `KERNEL_VERSION` — для
   документации и release notes;
 - `FLCLASH_VERSION` / `FLCLASH_SHA256` — опциональный FlClash. Из них

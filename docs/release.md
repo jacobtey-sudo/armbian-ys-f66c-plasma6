@@ -45,6 +45,12 @@ Armbian-unofficial_<armbian>_Ys-f66c_trixie_vendor_<kernel>_kde-plasma_desktop.i
    ```
 
 4. Записать образ на microSD и пройти smoke-тест:
+
+   ```sh
+   ./scripts/smoke-test.sh
+   ```
+
+   Приложить итог к release notes. Дополнительно проверить вручную:
    - загрузка и поворот на всех этапах;
    - SDDM и вход;
    - панель, апплеты, окно;

@@ -53,6 +53,35 @@ config/versions.env
 выполняется позже. Для системных настроек (`/etc/xdg`, `/etc/skel`) оба слоя
 пишут согласованное содержимое — это проверяется при изменении.
 
+## Разделение board-support и desktop (план)
+
+Сейчас `armbian-ys-f66c` собирает десктоп сам: `BUILD_DESKTOP=yes`,
+`DESKTOP_ENVIRONMENT=kde-plasma`, desktop-overlay и KDE-хуки в
+`config/boards/ys-f66c.csc`. Его `config-ys-f66c.conf` указывает на `noble`
+(Plasma 5), который больше не собирают, а overlay дублирует overlay этого
+репозитория. Отличия: `etc/xdg/*` есть только здесь, `psd.service` — только
+там.
+
+Целевая структура:
+
+- `armbian-ys-f66c` — board support и консольная база: ядро, DTS, U-Boot,
+  железные хуки и сервисы. `BUILD_DESKTOP=no`, без desktop-overlay.
+- `armbian-ys-f66c-plasma6` — десктоп: board-конфиг
+  `config-ys-f66c-plasma6.conf`, overlay Plasma 6 и KDE/SDDM-хуки;
+  `build.sh` кладёт конфиг в `userpatches`.
+
+Порядок работ (нужна пересборка и проверка на microSD):
+
+1. перенести desktop-хуки и пакеты из `ys-f66c.csc` в plasma6;
+2. убрать desktop-overlay из базового репозитория;
+3. включить в base `BUILD_DESKTOP=no` и убрать `noble`-конфиг;
+4. добавить board-конфиг в plasma6 и копировать его в `build.sh`;
+5. пересобрать образ, проверить и только затем сдвинуть
+   `ARMBIAN_BASE_COMMIT` на новый коммит base.
+
+Пока пересборка не сделана, пин в `config/versions.env` не меняется: образ
+`v26.11.0` собран из текущего коммита base.
+
 ## Пины
 
 `config/versions.env` — единственный источник зафиксированных версий.

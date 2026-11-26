@@ -18,4 +18,7 @@
   (`armbian-ys-f66c`), который кладётся в `userpatches`;
 - `BOARD_CONFIG` — имя board-конфига (`config-<name>.conf`) из board support;
 - `DISTRO`, `PLASMA_VERSION`, `QT_VERSION`, `KERNEL_VERSION` — для
-  документации и release notes.
+  документации и release notes;
+- `FLCLASH_VERSION` / `FLCLASH_SHA256` — опциональный FlClash. Из них
+  `scripts/gen-runtime-pins.sh` собирает `/etc/ys-f66c/versions.env` для
+  образа и для `scripts/install-overlay.sh`.

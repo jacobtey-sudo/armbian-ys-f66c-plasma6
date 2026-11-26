@@ -77,7 +77,8 @@ plasmashell. Это обход падения `QV4::CompiledData::CompilationUni
 - **FlClash** (arm64) — прокси-клиент; ставится при сборке из
   зафиксированного релиза, SHA256 проверяется. Если загрузка при сборке не
   удалась, образ собирается с предупреждением, а установщик можно запустить
-  позже: `sudo ys-f66c-install-flclash`.
+  позже: `sudo ys-f66c-install-flclash`. Версия и checksum — в
+  `config/versions.env`, на устройстве — в `/etc/ys-f66c/versions.env`.
 
 Точный состав overlay — в [overlay/README.md](../overlay/README.md).
 
@@ -92,6 +93,9 @@ SDDM. Автологин в образе не настроен; если он п
 ```sh
 sudo ./scripts/install-overlay.sh --user <имя>
 ```
+
+Политика обновлений, закрепление board-пакетов и откат — в
+[updates.md](updates.md).
 
 ---
 

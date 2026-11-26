@@ -70,6 +70,7 @@
 
 - `usr/local/bin/ys-f66c-install-flclash` — ставит FlClash (arm64) из
   зафиксированного релиза, SHA256 проверяется, `.deb` в git не хранится.
+  Версию и checksum скрипт читает из `/etc/ys-f66c/versions.env`;
   `customize-image.sh` board support запускает скрипт при сборке образа.
 
 ## Установка на живую систему

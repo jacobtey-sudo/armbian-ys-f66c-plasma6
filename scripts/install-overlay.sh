@@ -63,6 +63,12 @@ if [[ -d "${OVERLAY}/usr" ]]; then
 	chown_root_owned /usr "${OVERLAY}/usr"
 fi
 
+# Runtime pins (for example the pinned FlClash release) come from config/versions.env.
+echo "[overlay] writing runtime pins (/etc/ys-f66c/versions.env)"
+"${REPO_DIR}/scripts/gen-runtime-pins.sh" /etc/ys-f66c/versions.env
+chown root:root /etc/ys-f66c/versions.env
+chmod 0644 /etc/ys-f66c/versions.env
+
 # Refresh caches and enable the Bluetooth autoconnect service.
 glib-compile-schemas /usr/share/glib-2.0/schemas 2>/dev/null || true
 update-desktop-database /usr/share/applications 2>/dev/null || true

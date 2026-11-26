@@ -37,11 +37,13 @@
 
 ## Приложения, устанавливаемые при сборке
 
-### FlClash 0.9.4 (arm64)
+### FlClash (arm64)
 
 - Лицензия: GPL-3.0-or-later.
 - Исходники: <https://github.com/chen08209/FlClash>
 - Установщик: `usr/local/bin/ys-f66c-install-flclash`.
+- Версия и SHA256 — в [`config/versions.env`](../config/versions.env);
+  текущая версия — 0.9.4.
 - `.deb` не хранится в git: скачивается из зафиксированного релиза,
   SHA256 проверяется. Если установка не удалась, сборка продолжается с
   предупреждением.
@@ -64,4 +66,4 @@ Plasma, Qt, KDE Frameworks, SDDM, Maliit, WirePlumber и остальные
 
 ---
 
-[← Диагностика](troubleshooting.md) · [Оглавление](../README.md#документация) · [Релизы →](release.md)
+[← Вопросы и ответы](faq.md) · [Оглавление](../README.md#документация) · [Релизы →](release.md)

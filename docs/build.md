@@ -84,8 +84,8 @@ cd ~/ys-build
 `<ARMBIAN_BUILD_COMMIT>` и `<ARMBIAN_BASE_COMMIT>` берутся из
 `config/versions.env`.
 
-Пин `ARMBIAN_BASE_COMMIT` указывает на коммит до разделения. Сборку с новым
-коммитом base нужно сначала проверить на microSD, затем сдвинуть пин.
+Пин `ARMBIAN_BASE_COMMIT` указывает на коммит base после разделения.
+Проверка собранного образа на microSD — следующий шаг.
 
 ## Проверка результата
 

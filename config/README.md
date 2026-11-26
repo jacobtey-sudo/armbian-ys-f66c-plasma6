@@ -16,7 +16,7 @@
 - `ARMBIAN_BUILD_REPO` / `ARMBIAN_BUILD_COMMIT` — сборочный фреймворк Armbian;
 - `ARMBIAN_BASE_REPO` / `ARMBIAN_BASE_COMMIT` — board support и консольная
   база (`armbian-ys-f66c`), которая кладётся в `userpatches`; пин указывает на
-  коммит до разделения, сдвигать его можно только после пересборки и проверки;
+  коммит после разделения, проверка на microSD — следующий шаг;
 - `BOARD_CONFIG` — имя board-конфига из этого репозитория
   (`config/board/config-<name>.conf`);
 - `DISTRO`, `PLASMA_VERSION`, `QT_VERSION`, `KERNEL_VERSION` — для

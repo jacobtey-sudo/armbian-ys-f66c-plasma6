@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Документация
+    url: https://github.com/jacobtey-sudo/armbian-ys-f66c-plasma6#документация
+    about: Сборка, запись образа, железо, обновления и диагностика.
+  - name: Не загружается после установки на eMMC
+    url: https://github.com/jacobtey-sudo/armbian-ys-f66c-plasma6/blob/main/docs/recovery.md
+    about: UART2, загрузка с microSD, fsck, резервная копия и восстановление.
+  - name: Готовый образ
+    url: https://github.com/jacobtey-sudo/armbian-ys-f66c-plasma6/releases
+    about: Скачать pre-release, checksums и отчёт сборки.

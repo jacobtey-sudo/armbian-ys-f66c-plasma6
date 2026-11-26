@@ -1,0 +1,136 @@
+name: Сообщить об ошибке
+description: Проблема с загрузкой, Plasma, железом или образом YS-F66C
+title: "[bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Спасибо за отчёт. Чем точнее данные, тем быстрее удастся найти причину.
+
+        Перед отправкой проверьте:
+        - [docs/troubleshooting.md](https://github.com/jacobtey-sudo/armbian-ys-f66c-plasma6/blob/main/docs/troubleshooting.md);
+        - [docs/known-issues.md](https://github.com/jacobtey-sudo/armbian-ys-f66c-plasma6/blob/main/docs/known-issues.md);
+        - [docs/recovery.md](https://github.com/jacobtey-sudo/armbian-ys-f66c-plasma6/blob/main/docs/recovery.md), если система не загружается.
+
+        **Проверьте логи перед публикацией.** В `armbianmonitor -u`, `dmesg` и
+        `journalctl` могут быть MAC-адреса, серийные номера, имена устройств,
+        SSID и пути с именем пользователя. Удалите или замените их.
+
+  - type: input
+    id: release
+    attributes:
+      label: Версия образа
+      description: Тег релиза или вывод `cat /etc/armbian-release | grep -E 'VERSION|REVISION'`.
+      placeholder: v26.11.0 / 26.11.0-trunk
+    validations:
+      required: true
+
+  - type: input
+    id: checksum
+    attributes:
+      label: SHA256 архива
+      description: |
+        Вывод `sha256sum -c *.img.xz.sha256` или строка из `.img.xz.sha256`.
+        Для образа, установленного на eMMC, укажите checksum исходного `.img.xz`.
+      placeholder: d4a0d9fb975df4640fec9af3222201eea14740745e13b39fc754249183b07407
+    validations:
+      required: true
+
+  - type: dropdown
+    id: media
+    attributes:
+      label: Носитель
+      description: Откуда загружена система?
+      options:
+        - microSD
+        - eMMC
+        - microSD, затем установка на eMMC
+        - Другое
+    validations:
+      required: true
+
+  - type: dropdown
+    id: wifi
+    attributes:
+      label: Ревизия Wi-Fi / Bluetooth
+      description: |
+        Определяется по `dmesg | grep -iE 'brcmfmac|aic8800|hci'`.
+        Если не знаете — выберите «Не знаю».
+      options:
+        - AP6212 (Broadcom BCM43430A1, SDIO vendor 02d0)
+        - AIC8800D80 (Wi-Fi 6, SDIO vendor c8a1)
+        - Не знаю
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Что произошло
+      description: Опишите проблему и что вы ожидали.
+      placeholder: После обновления Plasma экран остаётся чёрным, хотя SDDM появляется...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Как повторить
+      description: Последовательность действий, после которой появляется проблема.
+      placeholder: |
+        1. Записать образ на microSD
+        2. Загрузиться, войти в Plasma
+        3. Открыть ...
+        4. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Диагностика
+      description: |
+        Вставьте вывод команд или ссылку на `armbianmonitor -u`.
+        Если система не загружается, напишите это и приложите лог UART.
+      value: |
+        ```
+        $ uname -r
+        $ systemctl --failed
+        $ journalctl -b -p err --no-pager
+        $ dmesg --level=err,warn
+        ```
+      render: shell
+    validations:
+      required: true
+
+  - type: input
+    id: armbianmonitor
+    attributes:
+      label: Ссылка armbianmonitor -u
+      description: |
+        `sudo armbianmonitor -u` загружает отчёт и печатает ссылку. Если команда
+        недоступна или система не загружается, напишите «нет».
+      placeholder: https://paste.armbian.com/...
+    validations:
+      required: true
+
+  - type: textarea
+    id: media-files
+    attributes:
+      label: Фото, видео, UART-лог
+      description: |
+        Приложите файлы перетаскиванием. Для проблем с экраном полезно фото
+        панели; для зависаний — последние строки UART2 (1500000 8N1).
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Проверка приватности
+      options:
+        - label: Я удалил из логов MAC-адреса, серийные номера, SSID, имена пользователей и другие личные данные.
+          required: true
+        - label: Я проверил документацию и известные проблемы; эта проблема там не описана.
+          required: true

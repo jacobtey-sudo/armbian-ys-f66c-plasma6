@@ -1,7 +1,7 @@
 #!/bin/sh
 # Connect trusted Bluetooth audio devices after boot.
 # A headset does not reconnect on its own here.
-for attempt in 1 2 3 4 5; do
+for _ in 1 2 3 4 5; do
     for mac in $(bluetoothctl devices Paired 2>/dev/null | awk '{print $2}'); do
         info=$(bluetoothctl info "$mac" 2>/dev/null) || continue
         echo "$info" | grep -q "Connected: yes" && continue

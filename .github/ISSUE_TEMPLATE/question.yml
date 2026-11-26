@@ -1,0 +1,50 @@
+name: Задать вопрос
+description: Вопрос по установке, сборке, железу или совместимости
+title: "[question]: "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Вопросы по установке и сборке сначала проверьте в документации:
+        [README](https://github.com/jacobtey-sudo/armbian-ys-f66c-plasma6#документация),
+        [FAQ](https://github.com/jacobtey-sudo/armbian-ys-f66c-plasma6/blob/main/docs/faq.md),
+        [troubleshooting](https://github.com/jacobtey-sudo/armbian-ys-f66c-plasma6/blob/main/docs/troubleshooting.md).
+
+        Не публикуйте пароли, токены, приватные ключи и MAC-адреса.
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Вопрос
+      description: Что вы хотите выяснить или сделать?
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Контекст
+      description: |
+        Что уже пробовали, какая версия образа, носитель (microSD/eMMC),
+        ревизия Wi-Fi, вывод команд. Если вопрос про сборку — версия хоста,
+        Docker и `config/versions.env`.
+    validations:
+      required: true
+
+  - type: input
+    id: release
+    attributes:
+      label: Версия образа или коммит
+      description: Тег релиза, `26.11.0-trunk` или SHA коммита репозитория.
+      placeholder: v26.11.0 / 26.11.0-trunk / b8526ea
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: docs-checked
+    attributes:
+      label: Проверка документации
+      options:
+        - label: Я посмотрел README, FAQ и troubleshooting; ответа там нет.
+          required: true

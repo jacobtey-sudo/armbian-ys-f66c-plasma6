@@ -3,27 +3,27 @@
 <details name="screenshots" id="shot-1" open>
 <summary>1 / 3</summary>
 
-![Рабочий стол Plasma 6](docs/images/plasma-desktop.png)
-
 [←](#user-content-shot-3) · [→](#user-content-shot-2)
+
+![Рабочий стол Plasma 6](docs/images/plasma-desktop.png)
 
 </details>
 
 <details name="screenshots" id="shot-2">
 <summary>2 / 3</summary>
 
-![Экранная клавиатура Maliit](docs/images/maliit-osk.png)
-
 [←](#user-content-shot-1) · [→](#user-content-shot-3)
+
+![Экранная клавиатура Maliit](docs/images/maliit-osk.png)
 
 </details>
 
 <details name="screenshots" id="shot-3">
 <summary>3 / 3</summary>
 
-![Меню приложений](docs/images/app-dashboard.png)
-
 [←](#user-content-shot-2) · [→](#user-content-shot-1)
+
+![Меню приложений](docs/images/app-dashboard.png)
 
 </details>
 

@@ -33,7 +33,7 @@ body:
       description: |
         Вывод `sha256sum -c *.img.xz.sha256` или строка из `.img.xz.sha256`.
         Для образа, установленного на eMMC, укажите checksum исходного `.img.xz`.
-      placeholder: d4a0d9fb975df4640fec9af3222201eea14740745e13b39fc754249183b07407
+      placeholder: 9ddd78fadfc493972f778535ebe5e7e1f0105f26b54f5378ffda650cc949ba3f
     validations:
       required: true
 

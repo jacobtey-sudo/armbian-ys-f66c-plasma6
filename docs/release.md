@@ -79,16 +79,19 @@ Armbian-unofficial_<armbian>_Ys-f66c_trixie_vendor_<kernel>_kde-plasma_desktop.i
 
 | Тег | Дата | build / board / desktop |
 | --- | --- | --- |
-| [v26.11.0](https://github.com/jacobtey-sudo/armbian-ys-f66c-plasma6/releases/tag/v26.11.0) | 25.11.2026 | `51d1cc65d` / `b55b7e0` / `05e5718` |
+| [v26.11.0](https://github.com/jacobtey-sudo/armbian-ys-f66c-plasma6/releases/tag/v26.11.0) | 26.11.2026 | `51d1cc65d` / `417476b` / `e26c2b9` |
 
 `v26.11.0` — pre-release: образ проверен по содержимому и на живой системе
 с тем же стеком, но полный smoke-тест после прошивки не проходил.
 
+Образ пересобран после разделения репозиториев: board support
+(`armbian-ys-f66c`) — консольная база, десктоп-слой — в этом репозитории.
+
 SHA256 (v26.11.0):
 
 ```text
-образ: 38290718e576b2bd7c7936acf068ad8467ca60f41556c37cc96b6eebbd5a36b4
-архив: d4a0d9fb975df4640fec9af3222201eea14740745e13b39fc754249183b07407
+образ: 491f04e5b3e5391980522a88421f375f38e8e06990b57997d9ceded93e316ca7
+архив: 9ddd78fadfc493972f778535ebe5e7e1f0105f26b54f5378ffda650cc949ba3f
 ```
 
 Перед публикацией убедиться, что в образе нет:

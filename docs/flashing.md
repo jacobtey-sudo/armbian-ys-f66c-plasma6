@@ -28,6 +28,11 @@ sha256sum -c *.img.sha
 **Внимание:** `/dev/sdX` — это именно карта, а не системный диск. Проверьте
 `lsblk` перед записью.
 
+Используйте брендовую карту от 16 ГБ (Samsung EVO Select/Plus, SanDisk
+Extreme/Ultra, Kingston Canvas Go! Plus). No-name карты могут молча портить
+данные — симптомы и проверка в
+[known-issues.md](known-issues.md#microsd-скорость-и-надёжность).
+
 Готовый архив можно писать потоком, без распаковки на диск:
 
 ```sh
